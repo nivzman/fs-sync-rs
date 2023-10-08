@@ -83,7 +83,11 @@ impl Mutex {
     }
 
     fn check_header_integrity(file: &mut File) -> Result<bool, Error>  {
-        let header = Mutex::read_header(file)?;
+        let header = match Mutex::read_header(file) {
+            Err(Error::Io(ref e)) if e.kind() == std::io::ErrorKind::UnexpectedEof => return Ok(false),
+            Err(e) => return Err(e),
+            Ok(header) => header
+        };
         Ok(header != header::CLEAR_HEADER && header::check_integrity(&header))
     }
 

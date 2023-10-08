@@ -25,7 +25,7 @@ pub fn new() -> Header {
 }
 
 pub fn check_integrity(header: &Header) -> bool {
-    let guid: &[u8] = &header[..GUID_SIZE];
+    let guid= &header[..GUID_SIZE];
     let guid_hash = &header[GUID_SIZE..GUID_SIZE+HASH_SIZE];
     calculate_hash(guid).as_ref() == guid_hash
 }
